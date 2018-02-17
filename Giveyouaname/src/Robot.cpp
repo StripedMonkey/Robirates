@@ -16,6 +16,7 @@
 //Include Spark.h
 #include <Spark.h>
 #include <Joystick.h>
+#include <Math.h>
 
 class Robot : public frc::IterativeRobot {
 public:
@@ -30,6 +31,8 @@ public:
 	frc::Spark *left;
 	frc::Spark *right;
 	frc::Joystick *stick;
+	double lx, ly, rx, ry = 0;
+	double deadzone = 0.2;
 
 	/*
 	 * This autonomous (along with the chooser code above) shows how to
@@ -68,7 +71,6 @@ public:
 
 	void TeleopInit() {
 		stick = new frc::Joystick(0);
-		double lx, ly, rx, ry;
 	}
 
 	void TeleopPeriodic() {
@@ -77,7 +79,20 @@ public:
 		rx = stick->GetRawAxis(4);
 		ry = stick->GetRawAxis(5);
 
+		if(std::abs(ly) > deadzone){
+			left->Set(-ly);
+		} else {
+			left->Set(0);
+		}
+
+		if(std::abs(ry) > deadzone){
+			right->Set(ry);
+		} else {
+			right->Set(0);
+		}
 	}
+
+
 
 	void TestPeriodic() {}
 

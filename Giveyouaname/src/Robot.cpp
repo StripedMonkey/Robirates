@@ -31,8 +31,9 @@ public:
 	frc::Spark *left;
 	frc::Spark *right;
 	frc::Joystick *stick;
-	double lx, ly, rx, ry = 0;
-	double deadzone = 0.2;
+	double lx, ly, rx, ry, ly1, ry1 = 0;
+	double deadzone = 0.0;
+	double scalar = .2;
 
 	/*
 	 * This autonomous (along with the chooser code above) shows how to
@@ -80,15 +81,19 @@ public:
 		ry = stick->GetRawAxis(5);
 
 		if(std::abs(ly) > deadzone){
-			left->Set(-ly);
+			left->Set(-((ly + ly1) * .5));
+			ly1 = (ly + ly1) * scalar;
 		} else {
 			left->Set(0);
+			ly1 = 0.0;
 		}
 
 		if(std::abs(ry) > deadzone){
-			right->Set(ry);
+			right->Set((ry + ry1) * .5);
+			ry1 = (ry + ry1) * scalar;
 		} else {
 			right->Set(0);
+			ry1 = 0.0;
 		}
 	}
 
